@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>学生信息管理系统</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		html,body {
+			height: 100%;
+			background: #33a3dc;
+		}
+
+		h1, div{
+			text-align: center;
+		}
+
+		ul {
+			list-style: none;
+		}
+
+		ul li {
+			text-align: center;
+		}
+
+        .panel {
+        	margin-top: 20px;
+        }
+
+		.panel button {
+			padding: 10px;
+			font-size: 20px;
+			cursor: pointer;
+			color: #00a6ac;
+			border: none;
+			border-radius:  10px;
+		}
+
+
+		.show {
+			margin-top: 20px;
+		}
+
+		.show-form button {
+			cursor: pointer;
+			color: #00a6ac;
+			border: none;
+			border-radius:  5px;
+			padding: 0 10px;
+			font-size: 20px;
+		}
+
+		.show-add p {
+			margin-top: 20px;
+			font-size: 25px;
+		}
+
+		button:hover {
+			color:#f47920;
+		}
+
+		.show li {
+			display: none;
+		}
+
+		.show li.operation {
+			display: block;
+		}
+
+
+	</style>
+</head>
+<body>
+	<h1>学生信息管理</h1>
+	<div class="panel">
+		<button >添加学生信息</button>
+		<button >删除学生信息</button>
+		<button >查询学生信息</button>
+		<button >修改学生信息</button>
+	</div>
+
+	<ul class="show">
+		<li class="operation">
+			<form class="show-form" method="get" action="/cgi-bin/stu/add.cgi" >
+				姓名:  <input type="text" name="name"><br><br>
+				年龄:  <input type="number" name="age"><br><br>
+				学号:  <input type="text" name="stuId"><br><br>
+				<button id="btn-add" type="submit">提交</button>
+			</form>
+		</li>
+
+		<li>
+			<form class="show-form" action="/cgi-bin/stu/del.cgi" method="get">
+				输入要删除的学生Id： <input type="text" name="stuId"><br><br>
+				<button id="btn-del" type="submit">确认删除</button>
+			</form>
+		</li>
+
+		<li>
+			<form class="show-form" action="/cgi-bin/stu/sel.cgi" method="get">
+				输入要学生姓名： <input type="text" name="name" placeholder="输入* 查询所有"> <br><br>
+				<button id="btn-sel" type="submit">查询</button>
+			</form>
+		</li>
+
+		<li>
+		<form class="show-form" action="/cgi-bin/stu/mod.cgi" method="get">
+			学号:  <input type="text" name="stuId"><br><br>
+			姓名:  <input type="text" name="name"><br><br>
+			年龄:  <input type="number" name="age"><br><br>
+			<button id="btn-mod" type="submit">确认修改</button>
+		</form>
+		</li>
+	</ul>
+
+	<script>
+	  var btns  = document.querySelectorAll(".panel button");
+	  var lis = document.querySelectorAll(".show li");
+
+	  for (var i = 0; i < btns.length; i++){
+	  	btns[i].index = i;
+	  	btns[i].onclick = function(){
+	  		for (var j = 0; j < lis.length; j++){
+	  			lis[j].classList.remove("operation");
+	  		}
+	  		lis[this.index].classList.add("operation");
+	  	};
+	  }
+	</script>
+</body>
+</html>

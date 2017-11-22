@@ -1,0 +1,98 @@
+******************************************************************
+--------------部分操作--------------
+建数据库：
+linux@ubuntu:~$ sqlite3 my.db
+查看帮助：
+sqlite> .help
+文件存放位置：
+sqlite> .database
+退出：
+sqlite> .quit
+查看表：
+sqlite> .tables
+显示表的结构：
+sqlite> .schema
+
+*******************************************************************
+---------------语法------------------
+1.建表：
+sqlite> create table usr(id integer primary key, name text,age integer null, gender text, salary real not null); 
+2.删除表
+sqlite> drop table usr；
+
+3.插入数据：
+sqlite> insert into usr(id, name, age, salary) values(2, 'liu', 20, 6000);
+4.删除数据:
+sqlite> delete from usr where id = 2 and name = 'lisi'；//删除一条记录
+sqlite> delete from usr where id = 2 or name = 'lisi'；// and(与） or（或）
+
+5.修改数据：
+sqlite> update usr set gender = 'man'，name = 'lisi' where id = 3;
+6.查询数据：
+sqlite> select * from usr where id = 2;
+
+select * from usr order by id desc  limit 3;//// id 从大到小，降序显示出3条。
+select * from usr order by id asc   limit 3;//// id 从小到大，升序显示出3条。
+select  id  from usr ;//只查询id这一个字段的值。
+
+
+
+************************************************************
+------------------编程接口--------------------------
+网址：www.sqlite.org
+
+1.打开数据库：
+	int sqlite3_open(char *path, sqlite3 **db);
+	db:指向sqlite句柄的指针；
+	成功返回0；
+	失败返回错误码；
+
+2.出错判断
+	char *sqlite3_errmsg(sqlite3*);
+
+------------------------------------------------------------
+
+3.执行sql操作
+int sqlite3_exec(
+  sqlite3*,                                  /* 数据库句柄 */
+  const char *sql,                           /* SQL语句 */
+  int (*callback)(void*,int,char**,char**),  /* 回调函数 */
+  void *,                                    /* 函数参数 */
+  char **errmsg                              /* 错误信息指针的地址 */
+);
+
+------------------------------------------------------------
+
+回调执行函数：每找到一条自动执行一次函数
+typedef int （*sqlite3_callback）(
+			void *para, 	//传递给函数的参数
+			int f_num, 		//记录中包含的字段的数目
+			char **f_value, //包含每个字段值的指针数组
+			char **f_name	//包含每个字段名称的指针数组
+			);
+
+f_num 是查询到的符合条件的字段数(如果只查询一个字段的值，那么该值就是1)。
+f_value是查询到的符合条件的一行记录的值(如果符合条件的字段数为1，那么该值就对应一个字段，而且只有一个值)。
+
+
+---------------------------------------------------------------------------
+
+int   sqlite3_get_table(sqlite3 *db, const  char  *sql,  char ***result,  int*nrow,  int *ncolumn, char **errmsg);
+功能：执行SQL操作
+      db：数据库句柄
+      sql：SQL语句
+      resultp：用来指向sql执行结果的指针
+      nrow：满足条件的记录的数目
+      ncolumn：每条记录包含的字段数目
+      errmsg：错误信息指针的地址
+返回值：成功返回0，失败返回错误码
+
+
+nrow的值为查询到的符合条件的记录数(不包括字段名)。
+ncolumn的值为查询到的符合条件的字段数。
+注意：nrow的值不包括字段名，如果打印时用for (i = 0; i < nrow; i++)会打印出字段名，但是会少打印出一条符合条件的记录。
+      因此打印时要用 for (i = 0; i <nrow + 1; i++);将包括字段名在内的数据都打印出来。
+
+sqlite_free_table(char**result);用来释放get_table 函数申请的存放result的空间
+
+
